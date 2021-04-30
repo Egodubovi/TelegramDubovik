@@ -17,3 +17,7 @@ def new_user(nid, nname):
                           (?, ?, 0, 0, 0);''', (nid, nname))
         con.commit()
         con.close()
+
+
+def lose(lid):
+    pass

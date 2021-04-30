@@ -1,5 +1,6 @@
 import telebot
 from telebot import types
+import random
 import config
 import sqlighter
 import battle
@@ -47,19 +48,29 @@ def callback_inline(call):
         if call.data == 'bots':
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   reply_markup=None, text='Хорошо!')
+            player_ships = battle.enemy_ships1
+            points_d = 0
+            a, b = random.randint(0, 9), random.randint(0, 9)
+            if player_ships[a][b] == '▇':
+                points_d += 1
+            if points_d == 20:
+                bot.send_message(call.message.chat.id, 'Вы проиграли')
+                sqlighter.lose(call.message.from_user.id)
+            player_ships[a][b] = '×'
 
             bot.send_message(call.message.chat.id, f'Ваше поле:\n'
                                                    f'    A   B   C   D   E   F   G   H   I   J\n'
-                                                   f'1  {" ".join(battle.enemy_ships1[0])}\n'
-                                                    f'2  {" ".join(battle.enemy_ships1[1])}\n'
-                                                   f'3  {" ".join(battle.enemy_ships1[2])}\n'
-                                                   f'4  {" ".join(battle.enemy_ships1[3])}\n'
-                                                   f'5  {" ".join(battle.enemy_ships1[4])}\n'
-                                                   f'6  {" ".join(battle.enemy_ships1[5])}\n'
-                                                   f'7  {" ".join(battle.enemy_ships1[6])}\n'
-                                                   f'8  {" ".join(battle.enemy_ships1[7])}\n'
-                                                   f'9  {" ".join(battle.enemy_ships1[8])}\n'
-                                                   f'10{" ".join(battle.enemy_ships1[9])}\n')
+                                                   f'1  {" ".join(player_ships[0])}\n'
+                                                   f'2  {" ".join(player_ships[1])}\n'
+                                                   f'3  {" ".join(player_ships[2])}\n'
+                                                   f'4  {" ".join(player_ships[3])}\n'
+                                                   f'5  {" ".join(player_ships[4])}\n'
+                                                   f'6  {" ".join(player_ships[5])}\n'
+                                                   f'7  {" ".join(player_ships[6])}\n'
+                                                   f'8  {" ".join(player_ships[7])}\n'
+                                                   f'9  {" ".join(player_ships[8])}\n'
+                                                   f'10{" ".join(player_ships[9])}\n'
+                                                   f'Вас отаковали: {chr(b + 97)}{a + 1}')
         elif call.data == 'friends':
             bot.send_message(call.message.chat.id, 'Данный режим еще не достпен.')
         elif call.data == 'my_friends':

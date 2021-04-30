@@ -6,6 +6,9 @@ import sqlighter
 import battle
 import sqlite3
 
+# BattleShipGameBot
+# @battleshhipbot
+
 bot = telebot.TeleBot(config.TOKEN)
 pole = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10',
         'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10',
@@ -17,7 +20,7 @@ pole = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10',
         'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10',
         'I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8', 'I9', 'I10',
         'J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7', 'J8', 'J9', 'J10']
-batle = False
+batle = None
 points_d = 0
 points_u = 0
 player_ships = None
@@ -64,7 +67,11 @@ def stop_message(message):
 def answer(message):
     global batle, pole
     bot.send_message(message.chat.id, 'Я вас не понимаю.')
-    if batle and message.text in pole:
+    a = False
+    for i in pole:
+        if i == message.text:
+            a = True
+    if batle and a:
         user_atac(message)
 
 
@@ -133,6 +140,7 @@ def bot_atac(call):
 
 def user_atac(message):
     global batle, points_d, player_ships, enemy_ships
+    message.text[0] = ord()
     a, b = random.randint(0, 9), random.randint(0, 9)
     if player_ships[a][b] == '▇':
         points_d += 1
@@ -140,8 +148,9 @@ def user_atac(message):
     else:
         player_ships[a][b] = '×'
     if points_u == 20:
-        bot.send_message(message.chat.id, 'Вы проиграли')
-        sqlighter.lose(message.from_user.id)
+        bot.send_message(message.chat.id, 'Вы выиграли!')
+        batle = False
+        # sqlighter.lose(message.from_user.id)
 
     markup = types.InlineKeyboardMarkup(row_width=1)
     item1 = types.InlineKeyboardButton('Отакаовать в ответ 👊', callback_data='atac')

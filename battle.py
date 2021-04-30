@@ -61,7 +61,7 @@ def generate_enemy_ships():
             for j in range(0, s_y):
                 if enemy_ships[j][i] > 0:
                     sum_1_enemy = sum_1_enemy + 1
-        enemy_ships = [['▇' if i != 0 else ' * ' for i in j] for j in enemy_ships]
+        enemy_ships = [[' ▓ ' if i != 0 else ' ░ ' for i in j] for j in enemy_ships]
     return enemy_ships
 
 

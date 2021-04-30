@@ -25,6 +25,7 @@ points_d = 0
 points_u = 0
 player_ships = None
 enemy_ships = None
+enemy_ships2 = None
 
 
 @bot.message_handler(commands=['start'])
@@ -68,22 +69,25 @@ def answer(message):
     global batle, pole
     bot.send_message(message.chat.id, 'Я вас не понимаю.')
     a = False
+    print(pole)
     for i in pole:
         if i == message.text:
             a = True
+    print(a, batle)
     if batle and a:
         user_atac(message)
 
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
-    global batle, points_d, player_ships, enemy_ships, points_u
+    global batle, points_d, player_ships, enemy_ships, points_u, enemy_ships2
     try:
         if call.data == 'bots':
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   reply_markup=None, text='Хорошо!')
             player_ships = battle.enemy_ships1
             enemy_ships = battle.enemy_ships2
+            enemy_ships2 = [[' ░ ' for i in range(10)] for j in range(10)]
             bot_atac(call)
             points_d = 0
             points_u = 0
@@ -111,9 +115,9 @@ def callback_inline(call):
 def bot_atac(call):
     global batle, points_d, player_ships, enemy_ships
     a, b = random.randint(0, 9), random.randint(0, 9)
-    if player_ships[a][b] == '▇':
+    if player_ships[a][b] == ' ▓ ':
         points_d += 1
-        player_ships[a][b] = '❌'
+        player_ships[a][b] = ' ▒ '
     else:
         player_ships[a][b] = '×'
     if points_d == 20:
@@ -124,7 +128,7 @@ def bot_atac(call):
     item1 = types.InlineKeyboardButton('Отаковать в ответ 👊', callback_data='atac')
     markup.add(item1)
     bot.send_message(call.message.chat.id, f'Ваше поле:\n'
-                                           f'    A   B   C   D   E   F   G   H   I   J\n'
+                                           f'     A    B    C    D    E    F    G    H    I    J\n'
                                            f'1  {" ".join(player_ships[0])}\n'
                                            f'2  {" ".join(player_ships[1])}\n'
                                            f'3  {" ".join(player_ships[2])}\n'
@@ -135,14 +139,16 @@ def bot_atac(call):
                                            f'8  {" ".join(player_ships[7])}\n'
                                            f'9  {" ".join(player_ships[8])}\n'
                                            f'10{" ".join(player_ships[9])}\n'
-                                           f'Вас отаковали: {chr(b + 97)}{a + 1}❌', reply_markup=markup)
+                                           f'Вас отаковали: {chr(b + 97)}{a + 1}', reply_markup=markup)
 
 
 def user_atac(message):
     global batle, points_d, player_ships, enemy_ships
-    message.text[0] = ord()
+    a = int(message.text[1])
+    b = message.text[0]
+    print(a, b)
     a, b = random.randint(0, 9), random.randint(0, 9)
-    if player_ships[a][b] == '▇':
+    if player_ships[a][b] == ' ▓ ':
         points_d += 1
         player_ships[a][b] = '❌'
     else:
@@ -157,16 +163,16 @@ def user_atac(message):
     markup.add(item1)
     bot.send_message(message.chat.id, f'Ваше поле:\n'
                                            f'    A   B   C   D   E   F   G   H   I   J\n'
-                                           f'1  {" ".join(player_ships[0])}\n'
-                                           f'2  {" ".join(player_ships[1])}\n'
-                                           f'3  {" ".join(player_ships[2])}\n'
-                                           f'4  {" ".join(player_ships[3])}\n'
-                                           f'5  {" ".join(player_ships[4])}\n'
-                                           f'6  {" ".join(player_ships[5])}\n'
-                                           f'7  {" ".join(player_ships[6])}\n'
-                                           f'8  {" ".join(player_ships[7])}\n'
-                                           f'9  {" ".join(player_ships[8])}\n'
-                                           f'10{" ".join(player_ships[9])}\n'
+                                           f'1  {" ".join(enemy_ships2[0])}\n'
+                                           f'2  {" ".join(enemy_ships2[1])}\n'
+                                           f'3  {" ".join(enemy_ships2[2])}\n'
+                                           f'4  {" ".join(enemy_ships2[3])}\n'
+                                           f'5  {" ".join(enemy_ships2[4])}\n'
+                                           f'6  {" ".join(enemy_ships2[5])}\n'
+                                           f'7  {" ".join(enemy_ships2[6])}\n'
+                                           f'8  {" ".join(enemy_ships2[7])}\n'
+                                           f'9  {" ".join(enemy_ships2[8])}\n'
+                                           f'10{" ".join(enemy_ships2[9])}\n'
                                            f'Вас отаковали: {chr(b + 97)}{a + 1}❌', reply_markup=markup)
 
 
